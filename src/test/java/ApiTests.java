@@ -27,16 +27,16 @@ public class ApiTests {
                 .contentType(JSON)
                 .log().uri()
 
-        .when()
+                .when()
                 .post("/users")
 
-        .then()
+                .then()
                 .log().status()
                 .log().body()
                 .statusCode(201)
                 .body("name", is("tata"))
                 .body("job", is("QA"))
-                .body("id",  matchesPattern("^\\d{3}$"))
+                .body("id", matchesPattern("^\\d{3}$"))
                 .body("createdAt", notNullValue());
 
     }
@@ -48,10 +48,10 @@ public class ApiTests {
         given()
                 .log().uri()
 
-        .when()
+                .when()
                 .get("/users?page=2")
 
-        .then()
+                .then()
                 .log().status()
                 .log().body()
                 .statusCode(200)
@@ -72,10 +72,10 @@ public class ApiTests {
         given()
                 .log().uri()
 
-        .when()
+                .when()
                 .delete("/users/2")
 
-        .then()
+                .then()
                 .log().status()
                 .log().body()
                 .statusCode(204)
@@ -90,10 +90,10 @@ public class ApiTests {
         given()
                 .log().uri()
 
-        .when()
+                .when()
                 .get("/unknown/2")
 
-        .then()
+                .then()
                 .log().status()
                 .log().body()
                 .statusCode(200)
@@ -112,10 +112,10 @@ public class ApiTests {
         given()
                 .log().uri()
 
-        .when()
+                .when()
                 .get("/unknown/22")
 
-        .then()
+                .then()
                 .log().status()
                 .log().body()
                 .statusCode(404)
