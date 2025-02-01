@@ -1,22 +1,16 @@
 package tests;
 
-import io.restassured.RestAssured;
 import models.CreateRequestModel;
 import models.CreateResponseModel;
 import models.Page2ResponseModel;
+import models.UserResponseModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import io.qameta.allure.restassured.AllureRestAssured;
 
-import static helpers.CustomAllureListener.withCustomTemplates;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.*;
-import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static specs.TestSpec.*;
 
 
@@ -85,17 +79,15 @@ public class ApiTests extends TestBase {
     @DisplayName("Успешное удаление пользователя")
     void successfulDeleteUserTest() {
 
-        given()
-                .log().uri()
+        step("Удаляем пользователя с ID 2", () -> {
+            given(requestSpec)
 
-                .when()
-                .delete("/users/2")
+                    .when()
+                    .delete("/users/2")
 
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(204)
-                .body(emptyOrNullString());
+                    .then()
+                    .spec(responseCod204Spec);
+        });
 
     }
 
@@ -103,39 +95,42 @@ public class ApiTests extends TestBase {
     @DisplayName("Запрос на существующего  юзера")
     void singleExistingUserTest() {
 
-        given()
-                .log().uri()
+        UserResponseModel response = step("Проверяем пользователя с ID 2", () ->
+                given(requestSpec)
 
-                .when()
-                .get("/unknown/2")
+                        .when()
+                        .get("/unknown/2")
 
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
-                .body("data.id", equalTo(2))
-                .body("data.name", equalTo("fuchsia rose"))
-                .body("data.year", equalTo(2001))
-                .body("data.color", equalTo("#C74375"))
-                .body("data.pantone_value", equalTo("17-2031"));
+                        .then()
+                        .spec(responseCod200Spec)
+                        .extract().as(UserResponseModel.class));
 
+        step("Проверяем свойства пользователя с ID 2", () -> {
+            assertThat(response.getData().getId()).isEqualTo("2");
+            assertThat(response.getData().getName()).isEqualTo("fuchsia rose");
+            assertThat(response.getData().getYear()).isEqualTo("2001");
+            assertThat(response.getData().getColor()).isEqualTo("#C74375");
+            assertThat(response.getData().getPantone_value()).isEqualTo("17-2031");
+        });
     }
 
     @Test
     @DisplayName("Запрос на несуществующего  юзера")
     void singleNonExistingUserTest() {
 
-        given()
-                .log().uri()
+        UserResponseModel response = step("Проверяем пользователя с ID 22", () ->
+                given(requestSpec)
 
-                .when()
-                .get("/unknown/22")
+                        .when()
+                        .get("/unknown/22")
 
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(404)
-                .body(equalTo("{}"));
+                        .then()
+                        .spec(responseCod404Spec)
+                        .extract().as(UserResponseModel.class));
+
+        step("Проверяем, что тело ответа пустое", () -> {
+            assertThat(response.getData()).isNull();
+        });
 
     }
 }

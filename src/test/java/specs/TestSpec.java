@@ -35,4 +35,10 @@ public class TestSpec {
             .log(BODY)
             .expectStatusCode(204)
             .build();
+
+    public static ResponseSpecification responseCod404Spec = new ResponseSpecBuilder()
+            .log(STATUS)
+            .log(BODY)
+            .expectStatusCode(404)
+            .build();
 }
