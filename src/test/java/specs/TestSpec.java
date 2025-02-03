@@ -13,32 +13,26 @@ public class TestSpec {
 
     public static RequestSpecification requestSpec = with()
             .filter(withCustomTemplates())
-            .log().uri()
-            .log().headers()
-            .log().body()
+            .log().all()
             .contentType(JSON);
 
     public static ResponseSpecification responseCod201Spec = new ResponseSpecBuilder()
-            .log(STATUS)
-            .log(BODY)
+            .log(ALL)
             .expectStatusCode(201)
             .build();
 
     public static ResponseSpecification responseCod200Spec = new ResponseSpecBuilder()
-            .log(STATUS)
-            .log(BODY)
+            .log(ALL)
             .expectStatusCode(200)
             .build();
 
     public static ResponseSpecification responseCod204Spec = new ResponseSpecBuilder()
-            .log(STATUS)
-            .log(BODY)
+            .log(ALL)
             .expectStatusCode(204)
             .build();
 
     public static ResponseSpecification responseCod404Spec = new ResponseSpecBuilder()
-            .log(STATUS)
-            .log(BODY)
+            .log(ALL)
             .expectStatusCode(404)
             .build();
 }

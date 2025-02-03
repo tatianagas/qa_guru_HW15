@@ -54,7 +54,8 @@ public class ApiTests extends TestBase {
                 given(requestSpec)
 
                         .when()
-                        .get("/users?page=2")
+                        .queryParam("page", "2")
+                        .get("/users")
 
                         .then()
                         .spec(responseCod200Spec)
